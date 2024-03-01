@@ -43,6 +43,10 @@ We are interested in whether Edinburgh exhibited a change in measles susceptibil
 
 # Exploratory Analysis {#sec-EA}
 
+```{r}
+measles<- read.csv("DAProject16.csv")
+```
+
 # Formal Analysis {#sec-FA}
 
 We fit a normal linear model with...
