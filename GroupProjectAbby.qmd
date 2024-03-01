@@ -1,6 +1,6 @@
 ---
-title: "Write yout TITLE"
-author: "Your NAME goes here"
+title: "Measles susceptibility in Edinburgh"
+author: "Group 12"
 execute: 
   echo: false
   eval: true
