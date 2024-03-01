@@ -31,10 +31,19 @@ library(moderndive)
 
 Data on Measles susceptibility in primary school children, between 1998 and 2012, in the 101 intermediate zones(IZ) in Edinburgh has been recorded. The IZ are small geographical areas that contain, on average, 4000 residents.
 
+The data set DAProject16.csv contains the following data:
+
+-   Y- The number of pre-school children susceptible to measles in a given IZ
+
+-   N- The total number of pre-school children in a given IZ
+
+-   Year- The year the data was collected
+
+We are interested in whether Edinburgh exhibited a change in measles susceptibility following the retraction of the Wakefield article. We are also interested in if the change, if any, in measles susceptibility occurred in 2004 alongside the articles retraction.
+
 # Exploratory Analysis {#sec-EA}
 
 # Formal Analysis {#sec-FA}
-
 
 We fit a normal linear model with...
 
