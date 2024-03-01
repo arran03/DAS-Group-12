@@ -34,9 +34,3 @@ library(moderndive)
 # Formal Analysis {#sec-FA}
 
 # Conclusions {#sec-con}
-
-# Further Questions {#sec-further}
-
-## Further Question 1 {#sec-further1}
-
-## Further Question 2 {#sec-further2}
