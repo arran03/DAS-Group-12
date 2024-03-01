@@ -35,4 +35,7 @@ Data on Measles susceptibility in primary school children, between 1998 and 2012
 
 # Formal Analysis {#sec-FA}
 
+
+We fit a normal linear model with...
+
 # Conclusions {#sec-con}
