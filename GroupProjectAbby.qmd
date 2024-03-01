@@ -1,0 +1,42 @@
+---
+title: "Write yout TITLE"
+author: "Your NAME goes here"
+execute: 
+  echo: false
+  eval: true
+number-sections: true
+format:
+  html:
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(readr)
+library(ggplot2)
+library(ggfortify)
+library(tidyverse)
+library(tidymodels)
+library(gt)
+library(MASS)
+library(patchwork)
+library(moderndive)
+```
+
+# Introduction {#sec-intro}
+
+# Exploratory Analysis {#sec-EA}
+
+# Formal Analysis {#sec-FA}
+
+# Conclusions {#sec-con}
+
+# Further Questions {#sec-further}
+
+## Further Question 1 {#sec-further1}
+
+## Further Question 2 {#sec-further2}
