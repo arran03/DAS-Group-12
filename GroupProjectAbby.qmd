@@ -51,6 +51,8 @@ measles <- read.csv("DAProject16.csv")
 
 ## Model Fitting
 
+### Model 1
+
 Firstly, to investigate the change in measles susceptibility following the retraction of the Wakefield article, we fit a simple linear regression model with the proportion of children susceptible to measles and year (from 2004 onwards) as the response and explanatory variables respectively. The model can be written as:
 
 $$
@@ -78,6 +80,8 @@ get_regression_table(model1)[, c(1, 2, 5)] |>
 ```
 
 From this we infer that the proportion of children susceptible to measles decreased by 0.564% on average each year between 2004 and 2012. This estimate has a very small p-value, indicating year is a significant predictor of measles susceptibility. Therefore there is evidence of a significant change in measles susceptibility following the retraction of the Wakefield article, with the proportion of children susceptible decreasing each year.
+
+### Model 2
 
 We will now investigate whether the change in measles susceptibility occurred in 2004 or later, by fitting a multiple regression model with year (from 1998 to 2012) as the predictor, where we allow the rate of change in measles susceptibility to change after certain years. The full model can be written as:
 
