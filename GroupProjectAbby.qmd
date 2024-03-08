@@ -29,7 +29,9 @@ library(moderndive)
 
 # Introduction {#sec-intro}
 
-Data on Measles susceptibility in primary school children, between 1998 and 2012, in the 101 intermediate zones(IZ) in Edinburgh has been recorded. The IZ are small geographical areas that contain, on average, 4000 residents.
+The Scottish Childhood Immunization Record System (SCIRS) has recorded data on childhood vaccinations in Scotland.In 1998, Wakefield et al. published an article that linked the MMR vaccine to an increased risk of autism. The article gained large media coverage which resulted in a decline in vaccine uptake to about 80% in 2003. Following the drop in uptake, there was a large outbreak of measles in the UK.The article was partially retracted in 2004, before being fully discredited in 2010 after further studies failed to find any link between the vaccine and autism risk.
+
+We have data on Measles susceptibility in primary school children, between 1998 and 2012, in the 101 intermediate zones(IZ) in Edinburgh. The IZ are small geographical areas that contain, on average, 4000 residents.
 
 The data set DAProject16.csv contains the following data:
 
@@ -39,60 +41,82 @@ The data set DAProject16.csv contains the following data:
 
 -   Year- The year the data was collected
 
-We are interested in whether Edinburgh exhibited a change in measles susceptibility following the retraction of the Wakefield article. We are also interested in if the change, if any, in measles susceptibility occurred in 2004 alongside the articles retraction.
+We are interested in whether Edinburgh exhibited a change in measles susceptibility following the retraction of the Wakefield article. We are also interested in if the change, if any, in measles susceptibility occurred in 2004 alongside the articles retraction. @sec-EA consists of an exploratory analysis of the dataset to explore the potential relationship between year and the proportion of children susceptible to measles, while @sec-FA contains the results from fitting linear regression models to the data. @sec-con contains concluding remarks.
+
 
 # Exploratory Analysis {#sec-EA}
 
 ```{r}
-#| echo: false
-#| warning: false
-#| message: false
-#| label: tbl-sum
-#| tbl-cap: Mean,median and standard deviation of proportion by year.
-
-
-measles<- read_csv("DAProject16.csv")
-
-prop <- round((measles$Y/measles$N)*100, digits = 2)
-
-measles <- transform(measles, prop = prop)
-
-summary <- measles |>
-  group_by(Year) |>
-  summarise("Prop.Mean" = mean(prop),
-            "Prop.Median" = median(prop),
-            "Prop.sd" = sd(prop))
-
-summary |>
-  gt() |>
-  fmt_number(columns = c(Prop.Mean,Prop.Median,Prop.sd),
-             decimals = 2) |>
-  tab_spanner(label = "Proportion",
-              columns = c(Prop.Mean,Prop.Median,Prop.sd)) |>
-  cols_label(
-    Prop.Mean = html("Mean"),
-    Prop.Median = html("Median"),
-    Prop.sd = html("Std.Dev"))
+measles <- read.csv("DAProject16.csv")
 ```
 
-@tbl-sum shows that the mean and median proportion of primary children susceptible to measles decreased after 2004. This could be attributed to the fact that article from Wakefield et al that linked the MMR vaccine with an increased risk of autism was partially retracted in 2004. @tbl-sum shows that the standard deviation of the proportion grew slightly after 2004 but decreased dramatically alongside the mean and median between 2008 and 2010.
+# Formal Analysis {#sec-FA}
+
+## Model Fitting
+
+Firstly, to investigate the change in measles susceptibility following the retraction of the Wakefield article, we fit a simple linear regression model with the proportion of children susceptible to measles and year (from 2004 onwards) as the response and explanatory variables respectively. The model can be written as:
+
+$$
+y_i = \alpha + \beta \cdot Year +\epsilon_i ~~~~ \epsilon_i \sim N(0, \sigma^2)
+$$
+
+where
+
+-   $\alpha$ is the intercept of the regression line
+-   $\beta$ is the slope of the regression line, indicating the rate of change in measles susceptibility per year
+
+The regression coefficents from the above model are displayed in @tbl-model1.
 
 ```{r}
 #| echo: false
-#| warning: false
-#| message: false
-#| label: fig-box
-#| fig-cap: Proportion of primary children susceptible to measles by year. 
-
-ggplot(data = measles, mapping = aes(x = factor(Year), y = prop)) +
-  geom_boxplot() + labs(x = "Year", y = "Proportion(in %)")
-
+#| label: tbl-model1
+#| tbl-cap: "Estimates of the regression coefficents for simple linear model"
+prop <- round((measles$Y/measles$N)*100, digits = 2)
+measles <- transform(measles, prop = prop)
+measles2004 <- subset(measles, Year >= "2004")
+model1 <- lm(prop ~ Year, data = measles2004)
+get_regression_table(model1)[, c(1, 2, 5)] |>
+  gt() |>
+    cols_label(term = "Term", estimate = "Estimate", p_value = "p value")
 ```
 
-@fig-box shows that the median of the box plots for 2008 and 2010 are much lower than the box plots of the other years.
+From this we infer that the proportion of children susceptible to measles decreased by 0.564% on average each year between 2004 and 2012. This estimate has a very small p-value, indicating year is a significant predictor of measles susceptibility. Therefore there is evidence of a significant change in measles susceptibility following the retraction of the Wakefield article, with the proportion of children susceptible decreasing each year.
 
-# Formal Analysis  {#sec-FA}
+We will now investigate whether the change in measles susceptibility occurred in 2004 or later, by fitting a multiple regression model with year (from 1998 to 2012) as the predictor, where we allow the rate of change in measles susceptibility to change after certain years. The full model can be written as:
 
-We fit a normal linear model with...
+$$
+y_i = \alpha + \beta_{Year} +\beta_{2004} \cdot \mathbb{I}_{\mbox{2004}}(x) + \beta_{2008} \cdot \mathbb{I}_{\mbox{2008}}(x) + \epsilon_i ~~~~~ \epsilon_i \sim N(0, \sigma^2)
+$$
+
+where $\mathbb{I}_{\mbox{2004}}(x)$ is an indicator function such that
+
+$$
+\mathbb{I}_{\mbox{2004}}(x)=\left\{
+                \begin{array}{ll}
+                  1 ~~~ \mbox{if Year is after 2004},\\
+                  0 ~~~ \mbox{Otherwise}.\\
+                \end{array}
+              \right.
+$$
+
+and likewise for $\mathbb{I}_{\mbox{2008}}(x)$.
+
+The regression coefficents from the above model are displayed in @tbl-model2.
+
+```{r}
+#| echo: false
+#| label: tbl-model2
+#| tbl-cap: "Estimates of the regression coefficents for multiple linear model"
+measles$After2004 <- ifelse(measles$Year >2004, 1, 0)
+measles$After2008 <- ifelse(measles$Year>2008, 1, 0)
+model2 <- lm(prop ~ Year + After2004 + After2008, data = measles)
+get_regression_table(model2)[, c(1, 2, 5)] |>
+  gt() |>
+    cols_label(term = "Term", estimate = "Estimate", p_value = "p value")
+```
+
+From the table we see that the proportion of children susceptible to measles decreased by 0.807% on average each year after 2004, and by 3.815% each year after 2008. We also see that the `After2004` estimate is not significant at the 0.05 level, while `After2008` is. Hence, we conclude that the change in measles susceptibility happened later than 2004, indicating there was a delayed response to the retraction of the Wakefield article in terms of vaccination uptake.
+
+## Checking Model Assumptions
 
 # Conclusions {#sec-con}
