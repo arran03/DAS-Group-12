@@ -1,5 +1,5 @@
 ---
-title: "Measles susceptibility in Edinburgh"
+title: "The Change in measles susceptibility, in Edinburgh, following the retraction of the Wakefield article "
 author: "Group 12"
 execute: 
   echo: false
