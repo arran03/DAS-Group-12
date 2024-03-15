@@ -1,0 +1,38 @@
+---
+title: "Measles susceptibility in Edinburgh"
+author: "Group 12"
+execute: 
+  echo: false
+  eval: true
+number-sections: true
+format:
+  html:
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(readr)
+library(ggplot2)
+library(ggfortify)
+library(tidyverse)
+library(tidymodels)
+library(gt)
+library(MASS)
+library(patchwork)
+library(moderndive)
+```
+
+# Introduction {#sec-intro}
+
+Data are available on measles susceptibility in primary school children from the 101 intermediate zones (IZ) comprising Edinburgh, which are small geographical units containing, on average, 4000 residents between 1998 and 2012. The data are stored in `DAProject16.csv` and contain the following columns.
+
+# Exploratory Analysis {#sec-EA}
+
+# Formal Analysis {#sec-FA}
+
+# Conclusions {#sec-con}
