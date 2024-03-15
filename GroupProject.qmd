@@ -1,5 +1,5 @@
 ---
-title: "Measles susceptibility in Edinburgh"
+title: "The Change in measles susceptibility, in Edinburgh, following the retraction of the Wakefield article "
 author: "Group 12"
 execute: 
   echo: false
@@ -43,11 +43,52 @@ The data set DAProject16.csv contains the following data:
 
 We are interested in whether Edinburgh exhibited a change in measles susceptibility following the retraction of the Wakefield article. We are also interested in if the change, if any, in measles susceptibility occurred in 2004 alongside the articles retraction. @sec-EA consists of an exploratory analysis of the dataset to explore the potential relationship between year and the proportion of children susceptible to measles, while @sec-FA contains the results from fitting linear regression models to the data. @sec-con contains concluding remarks.
 
+
 # Exploratory Analysis {#sec-EA}
 
 ```{r}
-measles <- read.csv("DAProject16.csv")
+#| echo: false
+#| warning: false
+#| message: false
+#| label: tbl-sum
+#| tbl-cap: Mean,median and standard deviation of proportion by year.
+
+
+measles<- read_csv("DAProject16.csv")
+
+prop <- round((measles$Y/measles$N)*100, digits = 2)
+
+measles <- transform(measles, prop = prop)
+
+summary <- measles |>
+  group_by(Year) |>
+  summarise("Prop.Mean" = mean(prop),
+            "Prop.Median" = median(prop),
+            "Prop.sd" = sd(prop))
+
+summary |>
+  gt() |>
+  fmt_number(columns = c(Prop.Mean,Prop.Median,Prop.sd),
+             decimals = 2) |>
+  tab_spanner(label = "Proportion",
+              columns = c(Prop.Mean,Prop.Median,Prop.sd)) |>
+  cols_label(
+    Prop.Mean = html("Mean"),
+    Prop.Median = html("Median"),
+    Prop.sd = html("Std.Dev"))
 ```
+@tbl-sum shows that the mean and median proportion of primary children susceptible to measles decreased after 2004. This could be attributed to the fact that article from Wakefield et al that linked the MMR vaccine with an increased risk of autism was partially retracted in 2004. @tbl-sum shows that the standard deviation of the proportion grew slightly after 2004 but decreased dramatically alongside the mean and median between 2008 and 2010.
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: fig-box
+#| fig-cap: Proportion of primary children susceptible to measles by year. 
+
+ggplot(data = measles, mapping = aes(x = factor(Year), y = prop)) +
+  geom_boxplot() + labs(x = "Year", y = "Proportion(in %)")
+```
+@fig-box shows that the median of the box plots for 2008 and 2010 are much lower than the box plots of the other years.
 
 # Formal Analysis {#sec-FA}
 
